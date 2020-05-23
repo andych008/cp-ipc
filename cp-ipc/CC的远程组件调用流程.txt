@@ -1,0 +1,32 @@
+@startuml
+
+'请先安装PlantUML plugin查看该uml
+
+title __CC的远程组件调用流程__
+
+entity "A组件" as A
+entity "ContentProvider" as cp
+entity "IRemoteCCService" as remote
+
+entity "B组件" as B
+
+
+A [#green]-> cp: query(pkg-b)
+activate cp
+    cp -> B
+    B --> cp
+    cp [#green]--> A: 返回Binder对象IRemoteCCService
+deactivate cp
+
+hnote over A :A与B建立连接
+
+A [#green]-> remote: call(remoteCC, callback)
+activate remote
+    remote -> B:
+    B --> remote
+    remote [#green]--> A: 通过callback的Binder调用返回结果
+deactivate remote
+
+
+
+@enduml

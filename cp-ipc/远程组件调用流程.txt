@@ -2,13 +2,12 @@
 
 '请先安装PlantUML plugin查看该uml
 
-title __远程组件调用流程__
+title __cp-ipc远程组件调用流程__
 
 entity "A组件" as A
 entity "ContentProvider" as cp
 
 entity "B组件" as B
-entity "C组件" as C
 
 
 A [#green]-> cp: call(pkg-b, component, action)
@@ -18,13 +17,6 @@ activate cp
     cp [#green]--> A
 deactivate cp
 
-
-A [#green]-> cp: call(pkg-c, component, action)
-activate cp
-    cp -> C: runAction()
-    C --> cp
-    cp [#green]--> A
-deactivate cp
 
 
 

@@ -7,6 +7,34 @@ cp-ipc是基于ContentProvider实现的跨进程通信工具。
 ### 原理
 通过ContentProvider的call()执行跨进程请求；AIDL配合实现请求结果回调。
 
+![](./cp-ipc.png)
+
+### 使用
+1. 通过`IPCCaller.setSupport()`初始化IPCCaller。
+2. 同步调用：`IPCCaller.call()`
+3. 异步调用：`IPCCaller.callAsync()`
+4. 异步调用(通过Handler指定回调线程)：`IPCCaller.callAsyncCallbackOnHandler()`
+
+### 扩展
+`IPCRequest`定义了如下字段：
+```
+private String componentName;//组件名
+private String actionName;//action名(action是组件对外提供的功能，可以理解为一个类的方法)
+private HashMap<String, Object> params;//组件调用的参数
+private String callId;//组件调用方生成的callId
+private boolean isMainThreadSyncCall;//这个调用是在主线程发起，所以在组件B中也应该在主线程执行
+
+private Bundle extra;
+```
+上面定义这么多字段，也不可能覆盖所有的需求。所有预定义了extra字段供扩展。可以参考我的demo：MyIPCRequestTest
+
+
+
+### 单元测试
+1. 先运行`app-target`，它就是跨进程通信的组件B
+1. 再运行[`com.billy.cc.core.ipc.InstrumentedTest`](.\cp-ipc\src\androidTest\java\com\billy\cc\core\ipc\InstrumentedTest.java)，它就是跨进程通信的组件A
+
+
 ### 为什么写cp-ipc
 首先感谢[CC](https://github.com/luckybilly/CC)，部分代码直接来自于CC。
 个人认为CC是对程序员最友好的组件化框架，它真正做到了单独编译、运行一个组件，而且可以跨app调用其它组件。
@@ -37,6 +65,13 @@ cp-ipc是基于ContentProvider实现的跨进程通信工具。
 
 还有一个写cp-ipc的原因：[第2章 组件化选型](https://www.jianshu.com/p/4243b7c7f9be)这篇博客建议"RPC建议专门一个库实现"。
 所以，我想能不能抽离CC的ipc部分的代码用到ARouter上。
+
+### CC中的跨进程(对比与cp-ipc的区别)
+CC用到ContentProvider的query()，cp-ipc用到ContentProvider的call()。
+
+![](./cc-ipc.png)
+
+
 
 ### 写一个ARouter的跨进程组件调用的plugin的可行性分析
 todo
