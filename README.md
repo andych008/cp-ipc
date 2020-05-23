@@ -32,7 +32,7 @@ private Bundle extra;
 
 ### 单元测试
 1. 先运行`app-target`，它就是跨进程通信的组件B
-1. 再运行[`com.billy.cc.core.ipc.InstrumentedTest`](.\cp-ipc\src\androidTest\java\com\billy\cc\core\ipc\InstrumentedTest.java)，它就是跨进程通信的组件A
+1. 再运行[`com.billy.cc.core.ipc.InstrumentedTest`](cp-ipc/src/androidTest/java/com/billy/cc/core/ipc/InstrumentedTest.java)，它就是跨进程通信的组件A
 
 
 ### 为什么写cp-ipc
