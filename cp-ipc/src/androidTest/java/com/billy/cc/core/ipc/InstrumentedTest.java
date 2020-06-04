@@ -1,11 +1,14 @@
 package com.billy.cc.core.ipc;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
+import android.os.SystemClock;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -68,6 +71,28 @@ public class InstrumentedTest {
         Context appContext = InstrumentationRegistry.getTargetContext();
 
         assertEquals("com.billy.cc.core.ipc.test", appContext.getPackageName());
+    }
+
+
+    @Test
+    public void startAct() throws Exception {
+        printLine();
+
+        String packageName = TARGET_APP;
+        long time = SystemClock.elapsedRealtime();
+        Intent intent = new Intent();
+        intent.setComponent(new ComponentName(packageName, "com.example.myapplication.TestActivity"));
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        // Context of the app under test.
+        Context appContext = InstrumentationRegistry.getTargetContext();
+        try {
+            appContext.startActivity(intent);
+            CP_Util.log("wakeup remote app '%s' success. time=%d", packageName, (SystemClock.elapsedRealtime() - time));
+        } catch(Exception e) {
+            CP_Util.printStackTrace(e);
+            CP_Util.log("wakeup remote app '%s' failed. %s, time=%d", packageName, e.getMessage(), (SystemClock.elapsedRealtime() - time));
+            fail(String.format("wakeup remote app '%s' failed. %s,  time=%d",packageName, e.getMessage(), (SystemClock.elapsedRealtime() - time)));
+        }
     }
 
 
